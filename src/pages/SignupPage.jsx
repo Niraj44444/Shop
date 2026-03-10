@@ -1,6 +1,5 @@
-// src/pages/SignUpPage.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -17,15 +16,9 @@ export default function SignUpPage() {
 
   const navigate = useNavigate();
 
-  // 📧 Email + password signup
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (!email || !password || !confirmPassword) {
-      setError("Please fill out all fields.");
-      return;
-    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
@@ -33,47 +26,34 @@ export default function SignUpPage() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", userCredential.user.uid), {
         email: userCredential.user.email,
-        bookmarks: [],
+        createdAt: new Date(),
         provider: "password",
       });
-
-      navigate("/bookmark");
+      navigate("/"); // Redirect to Home
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // 🔑 Google signup / login
   const handleGoogleSignup = async () => {
     setError("");
-
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
-      // Create Firestore user only if not exists
       if (!userSnap.exists()) {
         await setDoc(userRef, {
           email: user.email,
           name: user.displayName,
-          photoURL: user.photoURL,
-          bookmarks: [],
           provider: "google",
         });
       }
-
-      navigate("/bookmark");
+      navigate("/"); // Redirect to Home
     } catch (err) {
       setError(err.message);
     }
@@ -87,7 +67,6 @@ export default function SignUpPage() {
           <p className="subtitle">Join our community today!</p>
 
           <div className="input-group">
-            <span>📧</span>
             <input
               type="email"
               placeholder="Email"
@@ -98,7 +77,6 @@ export default function SignUpPage() {
           </div>
 
           <div className="input-group">
-            <span>🔒</span>
             <input
               type="password"
               placeholder="Password"
@@ -109,7 +87,6 @@ export default function SignUpPage() {
           </div>
 
           <div className="input-group">
-            <span>🔒</span>
             <input
               type="password"
               placeholder="Confirm Password"
@@ -119,23 +96,17 @@ export default function SignUpPage() {
             />
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p style={{ color: "red", fontSize: '0.8rem' }}>{error}</p>}
 
-          <button type="submit" className="signup-btn">
-            Sign Up
-          </button>
+          <button type="submit" className="signup-btn">Sign Up</button>
         </form>
 
-        {/* 🔴 Google Signup Button */}
-        <button
-          onClick={handleGoogleSignup}
-          className="google-login-btn"
-        >
+        <button onClick={handleGoogleSignup} className="google-login-btn">
           Continue with Google
         </button>
 
         <p className="login-link">
-          Already have an account? <a href="/login">Log In</a>
+          Already have an account? <Link to="/login">Log In</Link>
         </p>
       </div>
     </div>

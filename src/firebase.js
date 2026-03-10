@@ -1,30 +1,24 @@
-// src/firebase.js
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-// Import Auth and Firestore to use in your app
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics"; // Included from your new project
 
-// Your web app's Firebase configuration (Correct Shop Project!)
+// ✅ Dual fallback: use Vite/Replit secret if available, otherwise fallback to public key
 const firebaseConfig = {
-  apiKey: "AIzaSyAHFnlzr7xJPWCsXMhztX1eIk19P56WEfU",
-  authDomain: "shop-b835b.firebaseapp.com",
-  projectId: "shop-b835b",
-  storageBucket: "shop-b835b.firebasestorage.app",
-  messagingSenderId: "23147409113",
-  appId: "1:23147409113:web:c1e031d8991ce2f12598c8",
-  measurementId: "G-LE9ZL7NGYW"
+  const mySecret = process.env['VITE_FIREBASE_API_KEY'],
+  authDomain: "shop-7adf4.firebaseapp.com",
+  projectId: "shop-7adf4",
+  storageBucket: "shop-7adf4.firebasestorage.app",
+  messagingSenderId: "502364202727",
+  appId: "1:502364202727:web:4c2402e9d7bdac0c41e442",
+  measurementId: "G-4JGJJ8YYLX"
 };
 
-// Initialize Firebase
+// ✅ Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// Initialize Analytics (Optional, but fine to leave in)
-export const analytics = getAnalytics(app);
-
-// Initialize and export Firebase services (This is the important part!)
+// ✅ Initialize & Export Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const googleProvider = new GoogleAuthProvider();
+export const analytics = getAnalytics(app);

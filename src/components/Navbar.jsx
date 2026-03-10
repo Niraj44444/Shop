@@ -1,15 +1,14 @@
-// src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../Context/AuthContext.jsx';
 import { auth } from '../firebase';
 
 export default function Navbar() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  // ⭐ Theme state
+  // Theme state logic
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
@@ -37,41 +36,20 @@ export default function Navbar() {
       </Link>
 
       <div className="navbar-actions">
+        {/* Link to Home/Contact (since Contact is on the Home page in your App.jsx) */}
+        <Link to="/" className="nav-link">
+          Home
+        </Link>
+
         {currentUser ? (
           <>
-            <Link to="/bookmark" className="nav-link">
-              Bookmark
-            </Link>
-
-            {/* ✅ New Reading History Link */}
-            <Link to="/history" className="nav-link">
-              Reading History
-            </Link>
-
-            <Link to="/insight-dashboard" className="nav-link">
-              Insight Dashboard
-            </Link>
-
-            <Link to="/all-books" className="nav-link">
-              All Books
-            </Link>
-
-            <Link to="/user" className="nav-link">
-              User
-            </Link>
+            {/* Removed non-existent links: Bookmark, History, Dashboard, All Books, User */}
             <button onClick={handleLogout} className="btn-primary-nav">
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/all-books" className="nav-link">
-              All Books
-            </Link>
-
-            <Link to="/contact" className="nav-link">
-              Contact
-            </Link>
             <Link to="/login" className="nav-link">
               Login
             </Link>
@@ -81,11 +59,12 @@ export default function Navbar() {
           </>
         )}
 
-        {/* 🌗 Sun/Moon Toggle */}
+        {/* 🌗 Theme Toggle remains as it is purely CSS/Logic based */}
         <button
           onClick={toggleTheme}
           className="theme-toggle-btn"
           aria-label="Toggle dark mode"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem' }}
         >
           {theme === 'light' ? '🌙' : '☀️'}
         </button>

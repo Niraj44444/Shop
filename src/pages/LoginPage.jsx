@@ -1,5 +1,4 @@
-// src/pages/LoginPage.jsx
-import React, { useState, useEffect } from "react"; // ✅ Added useEffect
+import React, { useState, useEffect } from "react"; 
 import { useNavigate, Link } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
@@ -7,7 +6,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
-import { useAuth } from "../context/AuthContext"; // ✅ Added
+import { useAuth } from "../Context/AuthContext.jsx"; 
 import "./LoginPage.css";
 
 export default function LoginPage() {
@@ -17,52 +16,43 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
-  const { user, loading } = useAuth(); // ✅ Added
+  const { currentUser, loading } = useAuth(); // Consistent naming
 
-  // 🔁 Redirect if user already logged in
   useEffect(() => {
-    if (!loading && user) {
-      navigate("/"); // or any page you want logged-in users to go
+    if (!loading && currentUser) {
+      navigate("/"); 
     }
-  }, [user, loading, navigate]);
+  }, [currentUser, loading, navigate]);
 
-  // 🔐 Email/password login
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
-
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/bookmark");
+      navigate("/"); // Redirect to Home
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // 🔑 Google login
   const handleGoogleLogin = async () => {
     setError("");
-    setMessage("");
-
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/bookmark");
+      navigate("/"); // Redirect to Home
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // 🔁 Forgot password
   const handleForgotPassword = async () => {
     setError("");
     setMessage("");
-
     if (!email) {
       setError("Please enter your email first.");
       return;
     }
-
     try {
       await sendPasswordResetEmail(auth, email);
       setMessage("Password reset email sent!");
@@ -71,7 +61,7 @@ export default function LoginPage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>; // ✅ Added: wait for auth to load
+  if (loading) return <div className="loading">Loading...</div>;
 
   return (
     <div className="login-page-container">
@@ -81,7 +71,6 @@ export default function LoginPage() {
           <p className="subtitle">Welcome back!</p>
 
           <div className="input-group">
-            <span>📧</span>
             <input
               type="email"
               placeholder="Email"
@@ -92,7 +81,6 @@ export default function LoginPage() {
           </div>
 
           <div className="input-group">
-            <span>🔒</span>
             <input
               type="password"
               placeholder="Password"
@@ -102,19 +90,13 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {message && <p style={{ color: "green" }}>{message}</p>}
+          {error && <p style={{ color: "red", fontSize: '0.8rem' }}>{error}</p>}
+          {message && <p style={{ color: "green", fontSize: '0.8rem' }}>{message}</p>}
 
-          <button type="submit" className="login-btn">
-            Log In
-          </button>
+          <button type="submit" className="login-btn">Log In</button>
         </form>
 
-        {/* 🔵 Google Button */}
-        <button
-          onClick={handleGoogleLogin}
-          className="google-login-btn"
-        >
+        <button onClick={handleGoogleLogin} className="google-login-btn">
           Continue with Google
         </button>
 
@@ -125,7 +107,7 @@ export default function LoginPage() {
         </p>
 
         <p className="signup-link">
-          Don&apos;t have an account yet? <Link to="/signup">Sign up</Link>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
     </div>

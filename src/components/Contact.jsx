@@ -1,11 +1,10 @@
-// src/components/Contact.jsx
 import React, { useState } from "react";
 import { db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext"; // ✅ if you have auth context
+import { useAuth } from "../Context/AuthContext.jsx"; 
 
 function Contact() {
-  const { currentUser } = useAuth(); // user info from Firebase Auth
+  const { currentUser } = useAuth(); 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,12 +12,10 @@ function Contact() {
   });
   const [status, setStatus] = useState("");
 
-  // handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("Sending...");
@@ -31,7 +28,7 @@ function Contact() {
       });
 
       setStatus("✅ Message sent successfully!");
-      setFormData({ name: "", email: "", message: "" }); // reset
+      setFormData({ name: "", email: "", message: "" }); 
     } catch (error) {
       console.error("Error sending message:", error);
       setStatus("❌ Failed to send. Try again.");
@@ -39,12 +36,12 @@ function Contact() {
   };
 
   return (
-    <div className="content-card" id="contact">
+    <div className="content-card" id="contact" style={{ padding: '20px', marginTop: '20px' }}>
       <h2>Contact Us</h2>
       <p>Have questions? Please fill out the form below.</p>
 
       <form onSubmit={handleSubmit}>
-        <p>
+        <div style={{ marginBottom: '10px' }}>
           <input
             className="form-input"
             type="text"
@@ -54,8 +51,8 @@ function Contact() {
             value={formData.name}
             onChange={handleChange}
           />
-        </p>
-        <p>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
           <input
             className="form-input"
             type="email"
@@ -65,8 +62,8 @@ function Contact() {
             value={formData.email}
             onChange={handleChange}
           />
-        </p>
-        <p>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
           <textarea
             className="form-input"
             name="message"
@@ -74,14 +71,13 @@ function Contact() {
             required
             value={formData.message}
             onChange={handleChange}
+            style={{ width: '100%', minHeight: '100px' }}
           ></textarea>
-        </p>
+        </div>
 
-        <p>
-          <button className="btn btn-primary" type="submit">
-            Send Message
-          </button>
-        </p>
+        <button className="btn btn-primary" type="submit">
+          Send Message
+        </button>
       </form>
 
       {status && <p className="mt-2">{status}</p>}

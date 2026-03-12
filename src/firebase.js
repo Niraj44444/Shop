@@ -1,11 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics"; // Included from your new project
+import { getAnalytics } from "firebase/analytics";
 
-// ✅ Dual fallback: use Vite/Replit secret if available, otherwise fallback to public key
+// ✅ Using Vite environment variables with a fallback (like your other project)
 const firebaseConfig = {
-  const mySecret = process.env['VITE_FIREBASE_API_KEY'],
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyAh60GyfeUXAWxcYcILIXeylwOfn7Ca7ig",
   authDomain: "shop-7adf4.firebaseapp.com",
   projectId: "shop-7adf4",
   storageBucket: "shop-7adf4.firebasestorage.app",
